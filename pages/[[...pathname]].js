@@ -11,6 +11,9 @@ import Item from '../templates/components/Item';
 import { languages, getCurrentLanguage, setURLSearchParams } from '../utils';
 import Product from '../templates/components/Product_Commercetools';
 
+// import { renderToString } from 'react-dom/server'
+// import ssrPrepass from 'react-ssr-prepass'
+
 const nodeName = '/nextjs-ssg-minimal';
 const config = {
   componentMappings: {
@@ -109,7 +112,7 @@ export async function getStaticProps(context) {
 
     props.page = await pagesRes.json();
 
-    console.log("Content: " + JSON.stringify(props.page, null, 2))
+    //console.log("Content: " + JSON.stringify(props.page, null, 2))
 
     // Fetching page navigation
     const pagenavRes = await fetch(setURLSearchParams(pagenavApi + nodeName, 'lang=' + currentLanguage));
@@ -121,7 +124,11 @@ export async function getStaticProps(context) {
 
       props.templateAnnotations = await templateAnnotationsRes.json();
     }
-  //}
+
+  //   await ssrPrepass(<EditablePage content={props.page} config={config} templateAnnotations={props.templateAnnotations} />)
+  //  const result = renderToString(<EditablePage content={props.page} config={config} templateAnnotations={props.templateAnnotations} />);
+  //  console.log("result:" + result)
+ 
 
   return {
     props,
@@ -132,7 +139,12 @@ export default function Pathname(props) {
   const { page, templateAnnotations, pagenav, isPagesAppEdit, basename } = props;
 
   return (
+    
     <div className={isPagesAppEdit ? 'disable-a-pointer-events' : ''}>
+
+<link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'></link>
+
+
       {pagenav && <Navigation content={pagenav} nodeName={nodeName} basename={basename} />}
       {page && <EditablePage content={page} config={config} templateAnnotations={templateAnnotations} />}
     </div>

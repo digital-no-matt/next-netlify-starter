@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
+
 
 const Image = (props) => {
   let imageUrl = '';
@@ -17,11 +19,13 @@ const Image = (props) => {
 
 
 return (
+  <div className="img_container">
   <img
     className='Image'
     src={imageUrl}
     alt='Etiam Purus'
   />
+</div>
 );
 }
 

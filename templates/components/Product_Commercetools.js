@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 // import { Link } from 'react-router-dom';
 import Link from 'next/link';
@@ -79,7 +80,9 @@ class Product extends React.Component {
   state = {};
 
   async componentDidMount() {
-    let { product, productId } = this.props;
+    let { productId, title } = this.props;
+    
+    let product;
     console.log("productID:" + productId)
 
     const productObject = extractProductObject(productId);
@@ -110,7 +113,11 @@ class Product extends React.Component {
     console.log("render1");
     const { className, productId } = this.props;
     const { product = {} } = this.state;
-    const { name, price, discountedPrice, images = [] } = product;
+    let { name, price, discountedPrice, images = [] } = product;
+    
+    if (this.props.title){
+      name = this.props.title;
+    }
     let newClassName = 'Product text-center';
     let imgStyle = {};
 
@@ -119,18 +126,23 @@ class Product extends React.Component {
 
     console.log("render3");
     return (
-      <Link href={'http:dandelion.org'} className={newClassName}>
+      <div className={newClassName}>
 <>
         <div className='Product__name' data-mt>
           {name}
         </div>
         <div className='Product__price'>{renderPrice(price, discountedPrice)}</div>
         <div className='Product__imgContainer'>
+          
+          <img src={images[0]} alt='Etiam Purus' />
+
           <div className='Product__img contain' style={imgStyle} />
         </div>
         {discountedPrice && <div className='Product__sale'>SALE</div>}
+
+        <div className="shop">SHOP</div>
         </>
-      </Link>
+      </div>
     );
   }
 }

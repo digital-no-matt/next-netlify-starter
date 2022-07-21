@@ -20,34 +20,6 @@ class Commercetools {
     await this.getToken();
   }
 
-  // async getToken() {
-  //   const response = await fetch('https://auth.europe-west1.gcp.commercetools.com/oauth/token', {
-  //     body: 'grant_type=client_credentials&scope=manage_project:headless-ecommerce',
-  //     headers: {
-  //       Authorization: 'Basic ZWROUEdRUE5KTEZ6UFFHZm1NUzRHN1BXOkFKOTlISmNtQWRzZE9EdW9XaE1oZHNuQllPb0ljRUpM',
-  //       'Content-Type': 'application/x-www-form-urlencoded',
-  //     },
-  //     method: 'POST',
-  //   });
-  //   const json = await response.json();
-
-  //   this.token = json.access_token;
-  // }
-
-  async getToken() {
-    const response = await fetch('https://auth.europe-west1.gcp.commercetools.com/oauth/token', {
-      body: 'grant_type=client_credentials&scope=manage_project:magnolia-integration',
-      headers: {
-        'Authorization': 'Basic ' + btoa('sAoKET4CIRGjVbuEXLtcjDe6:kSE_ko1edNmzS3xH9_DOc-dODXQwCKEx'),
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      method: 'POST',
-    });
-    const json = await response.json();
-
-    this.token = json.access_token;
-  }
-
   async getProductsByFilter(filter) {
     let url = apiUrl + this.projectKey + '/product-projections/search?priceCurrency=' + this.currencyCode + filter;
 
@@ -83,12 +55,13 @@ class Commercetools {
     const name = json.masterData.current.name[this.languageCode];
     const prices1 = json.masterData.current.masterVariant.prices;
     const prices = this.getPrice(json.masterData.current.masterVariant.prices);
+// debugger;
 
     if (name && prices.normalPrice) {
       return {
         id,
         name,
-        description: json.masterData.current.description[this.languageCode],
+        description: json.masterData.current.description ? json.masterData.current.description[this.languageCode] : "-",
         price: prices.normalPrice,
         discountedPrice: prices.discountedPrice,
         images: json.masterData.current.masterVariant.images.map((image) => image.url),
@@ -132,6 +105,36 @@ class Commercetools {
     };
   }
 
+
+  // async getToken() {
+  //   const response = await fetch('https://auth.europe-west1.gcp.commercetools.com/oauth/token', {
+  //     body: 'grant_type=client_credentials&scope=manage_project:headless-ecommerce',
+  //     headers: {
+  //       Authorization: 'Basic ZWROUEdRUE5KTEZ6UFFHZm1NUzRHN1BXOkFKOTlISmNtQWRzZE9EdW9XaE1oZHNuQllPb0ljRUpM',
+  //       'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //     method: 'POST',
+  //   });
+  //   const json = await response.json();
+
+  //   this.token = json.access_token;
+  // }
+
+  async getToken() {
+    const response = await fetch('https://auth.europe-west1.gcp.commercetools.com/oauth/token', {
+      body: 'grant_type=client_credentials&scope=manage_project:magnolia-integration',
+      headers: {
+        'Authorization': 'Basic ' + btoa('sAoKET4CIRGjVbuEXLtcjDe6:kSE_ko1edNmzS3xH9_DOc-dODXQwCKEx'),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      method: 'POST',
+    });
+    const json = await response.json();
+
+    this.token = json.access_token;
+  }
+
+  
   async getCategories() {
     let url = apiUrl + this.projectKey + '/categories?limit=100';
 
